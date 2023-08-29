@@ -1,24 +1,36 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import { useState, useEffect } from "react";
+
+import Task from "./Task";
+import TaskList from "./TaskList";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+
+const theme = createTheme({
+  palette: {
+    primary: { main: "#152539", contrastText: "#fff" },
+    secondary: { main: "#B9B4C7", contrastText: "#fff" },
+  },
+});
 
 function App() {
+  const [todoList, setTodoList] = useState([]);
+  useEffect(() => {
+    const item = JSON.parse(localStorage.getItem("todo"));
+    setTodoList((state) => item);
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("todo", JSON.stringify(todoList));
+  }, [todoList]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ThemeProvider theme={theme}>
+      <div className="App">
+        <h2 className="mainHeading ">Todo Lists</h2>
+        <Task setTodoList={setTodoList} todoList={todoList} />
+        <TaskList todoList={todoList} setTodoList={setTodoList} />
+      </div>
+    </ThemeProvider>
   );
 }
 
